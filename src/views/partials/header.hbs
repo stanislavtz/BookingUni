@@ -1,0 +1,19 @@
+<nav>
+    <div class="left-container">
+        <ul>
+            <li><a href="/">Home</a></li>
+            {{#if user}}
+            <li><a href="/hotels/create">Add +</a></li>
+            {{else}}
+            <li><a href="/users/login">Login</a></li>
+            <li><a href="/users/register">Register</a></li>
+            {{/if}}
+        </ul>
+    </div>
+    {{#if user}}
+    <div class="right-container">
+        <a href="/users/{{user._id}}/profile" class="log-out">{{user.username}}</a>
+        <a href="/users/logout" class="log-out">Logout</a>
+    </div>
+    {{/if}}
+</nav>

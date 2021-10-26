@@ -1,0 +1,13 @@
+<a href="/hotels/{{_id}}/details" class="added-hotel">
+    <img 
+        src="
+            {{#if user}}
+                https://image.freepik.com/free-vector/flat-hotel-building_23-2148162501.jpg{{imgUrl}}
+            {{else}}
+                /
+            {{/if}}
+        " 
+        alt=""
+        class="picture-added-hotel">
+    <h3>{{name}}</h3>
+</a>
