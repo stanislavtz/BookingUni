@@ -7,7 +7,8 @@ function getCreateHotelPage(req, res) {
 
 async function createHotel(req, res) {
     try {
-        await 'Create bookingsService';
+        console.log('Create bookingsService');
+        res.redirect('/');
     } catch (error) {
         res.locals.error = error;
         res.render('booking/create', { ...req.body });
