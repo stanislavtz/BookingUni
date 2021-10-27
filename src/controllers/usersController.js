@@ -48,6 +48,7 @@ function logOutUser(req, res) {
 async function getUserProfilePage(req, res) {
     const user = await usersService.getOne(req.user._id);
     const reservations = user.bookedHotels.map(h => h.name).join(', ');
+    
     res.render('users/profile', { ...user, reservations });
 }
 
