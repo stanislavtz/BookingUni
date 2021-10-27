@@ -27,8 +27,9 @@ const hotelSchema = new mongoose.Schema({
         }
     ],
     owner: {
-        type: String,  //mongoose.Type.ObjectId
-        required: true // ref: 'User'
+        type: mongoose.Types.ObjectId,
+        ref: 'User',       
+        required: true
     }
 });
 

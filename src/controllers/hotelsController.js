@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const {isAuthenticated} = require('../middlewares/authMiddleware');
+const hotelsService = require('../services/hotelsService');
 
 function getCreateHotelPage(req, res) {
     res.render('booking/create');
@@ -7,7 +8,8 @@ function getCreateHotelPage(req, res) {
 
 async function createHotel(req, res) {
     try {
-        console.log('Create bookingsService');
+        const data = Object.assign(req.body, {owner: req.user._id});
+        await hotelsService.create(data);
         res.redirect('/');
     } catch (error) {
         res.locals.error = error;
@@ -16,6 +18,6 @@ async function createHotel(req, res) {
 }
 
 router.get('/create', isAuthenticated, getCreateHotelPage);
-router.post('/create', createHotel)
+router.post('/create', createHotel);
 
 module.exports = router;
