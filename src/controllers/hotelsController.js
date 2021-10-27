@@ -10,7 +10,10 @@ function getCreateHotelPage(req, res) {
 async function createHotel(req, res) {
     try {
         const data = Object.assign(req.body, { owner: req.user._id });
-        await hotelsService.create(data);
+        const user = await usersService.getOne(req.user._id);
+        const hotel = await hotelsService.create(data);
+        user.offeredHotels.push(hotel._id);
+        await usersService.update(user._id, user);
         res.redirect('/');
     } catch (error) {
         res.locals.error = error;
