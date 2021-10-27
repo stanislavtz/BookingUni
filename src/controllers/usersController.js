@@ -45,11 +45,19 @@ function logOutUser(req, res) {
     res.clearCookie(COOKIE_NAME).redirect('/');
 }
 
+async function getUserProfilePage(req, res) {
+    const user = await usersService.getOne(req.user._id);
+    const reservations = user.bookedHotels.map(h => h.name).join(', ');
+    res.render('users/profile', { ...user, reservations });
+}
+
 router.get('/register', isGuest, getRegisterPage);
 router.post('/register', isGuest, registerUser);
 
 router.get('/login', isGuest, getLoginPage);
 router.post('/login', isGuest, loginUser);
+
+router.get('/:userId/profile', getUserProfilePage);
 
 router.get('/logout', isAuthenticated, logOutUser);
 

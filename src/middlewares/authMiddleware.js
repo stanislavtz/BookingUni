@@ -1,5 +1,6 @@
 const { jwtVerify } = require('../utils/jwtUtil');
 const { COOKIE_NAME, JWT_SECRET } = require('../utils/constants');
+const hotelsService = require('../services/hotelsService');
 
 exports.auth = () => async function (req, res, next) {
     const token = req.cookies[COOKIE_NAME];
@@ -33,9 +34,16 @@ exports.isAuthenticated = function (req, res, next) {
     }
 
     res.locals.error = { message: 'You are not authenticated' }
-    res.status(401).render('home');
+    res.redirect('/users/login');
 }
 
-exports.isAuthorized = function (req, res, next) {
-    // TO DO when there si created objects in DB by logged in user!
+exports.isAuthorized = async function (req, res, next) {
+    const hotel = await hotelsService.getOne(req.params.hotelId);
+    
+    if(req.user._id == hotel.owner) {
+        return next();
+    }
+
+    res.locals.error = { message: 'You are not authorized' }
+    res.redirect('/');
 }

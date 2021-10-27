@@ -11,7 +11,6 @@ function config(app) {
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(auth());
-    app.use(getAllOffers());
 
     app.use(router());
 }

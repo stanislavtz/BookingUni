@@ -40,7 +40,17 @@ async function login(data) {
     return token;
 }
 
+function getOne(id) {
+    return User.findById(id).populate('bookedHotels').lean();
+}
+
+function update(id, user) { 
+   return User.findByIdAndUpdate(id, user);
+}
+
 module.exports = {
+    getOne,
     register,
-    login
+    login,
+    update
 }

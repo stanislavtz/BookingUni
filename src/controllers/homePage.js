@@ -1,6 +1,8 @@
 const router = require('express').Router();
+const hotelsService = require('../services/hotelsService');
 
-function getHomePage(req, res) {
+async function getHomePage(req, res) {
+    res.locals.hotels = await hotelsService.getAll();
     res.render('home/index');
 }
 
