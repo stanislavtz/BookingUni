@@ -4,15 +4,18 @@ const hotelSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [, 'Name is required'],
-        unique: true
+        unique: true,
+        min: [4, 'Name should be at least 4 characters']
     },
     city: {
         type: String,
-        required: [true, 'City is required']
+        required: [true, 'City is required'],
+        min: [3, 'City should be at least 4 characters']
     },
     imgUrl: {
         type: String,
-        required: [true, 'Image url is required']
+        required: [true, 'Image url is required'],
+        validate: [/https?/, 'Image url should start with http or https']
     },
     freeRooms: {
         type: Number,

@@ -12,11 +12,14 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, 'Username is required'],
-        unique: true
+        unique: true,
+        validate:[/^[A-Za-z0-9]+\@[a-z0-9]+\.[a-z]{2,3}$/i, 'Invalid email format']
     },
     password: {
         type: String,
-        required: [true, 'Password is required']
+        required: [true, 'Password is required'],
+        min: [5, 'Password should be at least 5 characters long '],
+        validate: [/^[A-Za-z0-9]{5}$/, 'Invalid password format']
     },
     bookedHotels: [
         {
