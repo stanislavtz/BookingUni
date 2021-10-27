@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAuthenticated, isAuthorized } = require('../middlewares/authMiddleware');
+const { isAuthenticated, isHotelOwner, isCustomer } = require('../middlewares/authMiddleware');
 const hotelsService = require('../services/hotelsService');
 const usersService = require('../services/usersService');
 
@@ -26,12 +26,16 @@ async function getHotelDetailsPage(req, res) {
         }
 
         if (hotel.owner == req.user._id) {
-            res.locals.isOwner = true;
+            res.locals.user.isOwner = true;
         }
 
         const clients = hotel.clients.map(cl => cl.username);
         if (clients.includes(req.user.username)) {
             res.locals.user.isClient = true;
+        }
+
+        if (hotel.freeRooms == 0) {
+            hotel.noRooms = 'There is no free room at the moment';
         }
 
         res.render('booking/details', { hotel });
@@ -52,7 +56,7 @@ async function getEditHotelPage(req, res) {
 async function editHotel(req, res) {
     try {
         await hotelsService.update(req.params.hotelId, req.body);
-        res.redirect(`/`);
+        res.redirect(`/hotels/${req.params.hotelId}/details`);
     } catch (error) {
         console.error(error);
         res.redirect(`/`);
@@ -71,10 +75,6 @@ async function bookHotel(req, res) {
         const clients = hotel.clients.map(cl => cl.username);
 
         if(!clients.includes(req.user.username)){
-            if (hotel.freeRooms == 0) {
-                throw { message: 'There is no free room at the moment' }
-            }
-
             hotel.freeRooms -= 1;
             hotel.clients.push(req.user._id);
             user.bookedHotels.push(hotel._id);
@@ -85,7 +85,7 @@ async function bookHotel(req, res) {
             res.locals.user.isClient = true;
         }
 
-        res.redirect('/');
+        res.redirect(`/hotels/${hotel._id}/details`);
     } catch (error) {
         console.error(error);
         res.redirect('/');
@@ -95,13 +95,13 @@ async function bookHotel(req, res) {
 router.get('/create', isAuthenticated, getCreateHotelPage);
 router.post('/create', isAuthenticated, createHotel);
 
-router.get('/:hotelId/edit', isAuthenticated, isAuthorized, getEditHotelPage);
-router.post('/:hotelId/edit', isAuthenticated, isAuthorized, editHotel);
+router.get('/:hotelId/edit', isAuthenticated, isHotelOwner, getEditHotelPage);
+router.post('/:hotelId/edit', isAuthenticated, isHotelOwner, editHotel);
 
 router.get('/:hotelId/details', isAuthenticated, getHotelDetailsPage);
 
-router.get('/:hotelId/delete', isAuthenticated, isAuthorized, deleteHotel);
+router.get('/:hotelId/delete', isAuthenticated, isHotelOwner, deleteHotel);
 
-router.get('/:hotelId/book', isAuthenticated, bookHotel);
+router.get('/:hotelId/book', isAuthenticated, isCustomer, bookHotel);
 
 module.exports = router;

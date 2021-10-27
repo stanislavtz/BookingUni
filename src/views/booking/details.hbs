@@ -9,17 +9,24 @@
                 <h3>{{hotel.name}}</h3>
             </div>
             <div>
-                {{city}}
+                {{hotel.city}}
             </div>
             
-            {{#unless isOwner}}   
+
+            {{#unless user.isOwner}}   
                 {{#unless user.isClient}}
-                    <p><span>Free rooms: {{hotel.freeRooms}}</span> </p>
+                    {{#if hotel.noRooms}}
+                        <p><span>{{hotel.noRooms}}</span> </p>
+                    {{else}}
+                        <p><span>Free rooms: {{hotel.freeRooms}}</span> </p>
                     <a href="/hotels/{{hotel._id}}/book" class="book">Book</a>
+                    {{/if}}
                 {{else}}
+                    {{> roomsInfo}} 
                     <p><span class="green">You already have booked a room</span> </p>
                 {{/unless}}
             {{else}}
+                {{> roomsInfo}} 
                 <a href="/hotels/{{hotel._id}}/edit" class="edit">Edit</a>
                 <a href="/hotels/{{hotel._id}}/delete" class="remove">Delete</a>
             {{/unless}}

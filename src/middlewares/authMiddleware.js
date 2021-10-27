@@ -37,7 +37,7 @@ exports.isAuthenticated = function (req, res, next) {
     res.redirect('/users/login');
 }
 
-exports.isAuthorized = async function (req, res, next) {
+exports.isHotelOwner = async function (req, res, next) {
     const hotel = await hotelsService.getOne(req.params.hotelId);
     
     if(req.user._id == hotel.owner) {
@@ -45,5 +45,16 @@ exports.isAuthorized = async function (req, res, next) {
     }
 
     res.locals.error = { message: 'You are not authorized' }
+    res.redirect('/');
+}
+
+exports.isCustomer = async function (req, res, next) {
+    const hotel = await hotelsService.getOne(req.params.hotelId);
+    
+    if(req.user._id != hotel.owner) {
+        return next();
+    }
+
+    res.locals.error = { message: 'You can\'t book your own hotel' }
     res.redirect('/');
 }

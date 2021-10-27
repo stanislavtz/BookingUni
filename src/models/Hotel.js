@@ -17,7 +17,7 @@ const hotelSchema = new mongoose.Schema({
     freeRooms: {
         type: Number,
         required: [true, 'Number of rooms is required'],
-        min: 1,
+        min: 0,
         max: 100
     },
     clients: [
